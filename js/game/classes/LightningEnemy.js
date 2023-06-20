@@ -1,22 +1,26 @@
 import Sprite from "../../engine/classes/Sprite.js";
 import canvas from "../../engine/canvas.js";
-import { player, oneLoopObjectsArr, addToMaxEnemies, enemiesBulletsArr } from "../main.js";
+import { player, oneLoopObjectsArr, addToMaxEnemies } from "../main.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
 import { playSound } from '../../engine/sound.js';
-import { getDistance } from '../../engine/gameFunctions.js';
-import EnemyBullet from "./EnemyBullet.js";
+import { getDistance, drawLightning } from '../../engine/gameFunctions.js';
 
-class SimpleEnemy extends Sprite {
+class LightningEnemy extends Sprite {
     constructor(x, y) {
-        super('enemy_52x78px.png', x, y);
-        this.speed = 0.04 + Math.random() * 0.04;
-        this.hp = 5;
-        this.damage = 10;
+        super('enemy_120x120px.png', x, y);
+        this.speed = 0.02 + Math.random() * 0.02;
+        this.sideSpeed = 0.015 + Math.random() * 0.015;
+        this.rotationSpeed = this.speed * 0.5;
+        this.hp = 30;
+        this.damage = 30;
         this.scores = this.hp * 5;
-        this.size = 24;
+        this.size = 52;
 
-        this.bulletSpeed = 0.2;
-        this.bulletDamage = 5;
+        this.shutDistance = 500;
+        this.shutDurationTimeout = 500;
+        this.shutDurationTime = this.shutDurationTimeout;
+        this.shutDamage = 0.01;
+        this.shutDamageStorage = 0;
         this.shutTimeout = 2000 + Math.floor(Math.random() * 1000);
         this.shutTime = this.shutTimeout;
 
@@ -46,14 +50,35 @@ class SimpleEnemy extends Sprite {
 
     update(dt) {
         // move
+        this.direction += this.rotationSpeed;
         this.centerY += this.speed * dt;
+        if (this.centerX !== player.centerX) {
+            let speedX = this.sideSpeed * dt;
+            if (Math.abs(this.centerX - player.centerX) > speedX) {
+                if (this.centerX > player.centerX) this.centerX -= speedX;
+                else this.centerX += speedX;
+            } else {
+                this.centerX = player.centerX;
+            }
+        }
 
         // attack
-        this.shutTime -= dt;
-        if (this.shutTime <= 0 && this.centerY > 0) {
-            this.shutTime += this.shutTimeout;
-            const bullet = new EnemyBullet(this.centerX, this.centerY, this.bulletSpeed, this.bulletDamage);
-            enemiesBulletsArr.push(bullet);
+        if (this.shutTime > 0) this.shutTime -= dt;
+        else if (getDistance(this, player) <= this.shutDistance) {
+            if (this.shutDurationTime > 0) {
+                this.shutDurationTime -= dt;
+                this.shutDamageStorage += dt * this.shutDamage;
+                drawLightning(this, player);
+                if (this.shutDamageStorage > 1) {
+                    let damage = +this.shutDamageStorage.toFixed();
+                    player.addDamage(damage);
+                    this.shutDamageStorage =- damage;
+                }
+            } else {
+                this.shutTime += this.shutTimeout;
+                this.shutDurationTime += this.shutDurationTimeout;
+            }
+
         }
 
         // test collision with player bullet
@@ -97,4 +122,4 @@ class SimpleEnemy extends Sprite {
     }
 }
 
-export default SimpleEnemy;
+export default LightningEnemy;

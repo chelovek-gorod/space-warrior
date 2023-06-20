@@ -25,6 +25,9 @@ import GameCursor from './classes/GameCursor.js';
 import PlayerShip from './classes/PlayerShip.js';
 import Asteroid from './classes/Asteroid.js';
 import SimpleEnemy from './classes/SimpleEnemy.js';
+import HeavyEnemy from './classes/HeavyEnemy.js';
+import FollowEnemy from './classes/FollowEnemy.js';
+import LightningEnemy from './classes/LightningEnemy.js';
 
 /*
 ** INIT CURSOR CONTROL
@@ -51,7 +54,7 @@ loader(sources, init);
 */
 
 let gameDeveloperLogo, gameTitleText, gameDescriptionText, startGameText, gameOverText;
-let isGameStart = false;
+let isGameStart = true;
 let checkStartGameTimeout = 11000;
 
 let scrollingBackground, smallGalaxyBackgroundLeft, smallGalaxyBackgroundRight,
@@ -73,20 +76,30 @@ let rocksArr = [];
 
 let enemiesArr = [];
 let maxEnemiesOnScreen = 2;
-function addToMaxEnemies( type ) { maxEnemiesOnScreen += 0.1 };
+function addToMaxEnemies() { maxEnemiesOnScreen += 0.2 };
 function createEnemy() {
-    return;
-    let type = Math.floor(Math.random() * maxEnemiesOnScreen);
-    switch (type) {
-        case 0 : type = 'simple'; break;
-        case 1 : type = 'simple'; break;
-        default : type = 'simple';
-    }
+    let enemy; // SimpleEnemy, HeavyEnemy, FollowEnemy, LightningEnemy
     let xx = Math.random() * canvas.width;
-    let yy = -Math.random() * canvas.centerX;
-    let speed = +((3 + Math.random() * 5) / 50).toFixed(2);
-    let enemy = new Asteroid(xx, yy, speed)
+    let yy = -Math.floor((Math.random() * canvas.height / 2) + canvas.height / 2);
+    let type = Math.floor(Math.random() * Math.floor(maxEnemiesOnScreen));
+    switch (type) {
+        case 0 :
+            enemy = new SimpleEnemy(xx, yy);
+        break;
+        case 1 :
+            enemy = new SimpleEnemy(xx, yy);
+        break;
+        case 2 :
+            enemy = new HeavyEnemy(xx, yy);
+        break;
+        case 3 :
+            enemy = new FollowEnemy(xx, yy);
+        break;
+        default :
+            enemy = new LightningEnemy(xx, yy);
+    }
     enemiesArr.push( enemy );
+    console.log(enemiesArr);
 }
 
 let enemiesBulletsArr = [];

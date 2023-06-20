@@ -1,24 +1,19 @@
 import Sprite from "../../engine/classes/Sprite.js";
 import canvas from "../../engine/canvas.js";
-import { player, oneLoopObjectsArr, addToMaxEnemies, enemiesBulletsArr } from "../main.js";
+import { player, oneLoopObjectsArr, addToMaxEnemies } from "../main.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
 import { playSound } from '../../engine/sound.js';
-import { getDistance } from '../../engine/gameFunctions.js';
-import EnemyBullet from "./EnemyBullet.js";
+import { getDistance, turnTo, moveAccordingDirection } from '../../engine/gameFunctions.js';
 
-class SimpleEnemy extends Sprite {
+class FollowEnemy extends Sprite {
     constructor(x, y) {
-        super('enemy_52x78px.png', x, y);
-        this.speed = 0.04 + Math.random() * 0.04;
-        this.hp = 5;
-        this.damage = 10;
+        super('enemy_240x102px.png', x, y);
+        this.speed = 0.02 + Math.random() * 0.02;
+        this.turnSpeed = 0.01 + Math.random() * 0.01;
+        this.hp = 15;
+        this.damage = 25;
         this.scores = this.hp * 5;
-        this.size = 24;
-
-        this.bulletSpeed = 0.2;
-        this.bulletDamage = 5;
-        this.shutTimeout = 2000 + Math.floor(Math.random() * 1000);
-        this.shutTime = this.shutTimeout;
+        this.size = 50;
 
         this.isExist = true;
     }
@@ -46,15 +41,8 @@ class SimpleEnemy extends Sprite {
 
     update(dt) {
         // move
-        this.centerY += this.speed * dt;
-
-        // attack
-        this.shutTime -= dt;
-        if (this.shutTime <= 0 && this.centerY > 0) {
-            this.shutTime += this.shutTimeout;
-            const bullet = new EnemyBullet(this.centerX, this.centerY, this.bulletSpeed, this.bulletDamage);
-            enemiesBulletsArr.push(bullet);
-        }
+        turnTo(this, player, this.turnSpeed * dt);
+        moveAccordingDirection(this, this.speed * dt);
 
         // test collision with player bullet
         for(let i = 0; i < player.bulletsArr.length; i++) {
@@ -97,4 +85,4 @@ class SimpleEnemy extends Sprite {
     }
 }
 
-export default SimpleEnemy;
+export default FollowEnemy;

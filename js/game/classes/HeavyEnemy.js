@@ -6,18 +6,19 @@ import { playSound } from '../../engine/sound.js';
 import { getDistance } from '../../engine/gameFunctions.js';
 import EnemyBullet from "./EnemyBullet.js";
 
-class SimpleEnemy extends Sprite {
+class HeavyEnemy extends Sprite {
     constructor(x, y) {
-        super('enemy_52x78px.png', x, y);
-        this.speed = 0.04 + Math.random() * 0.04;
-        this.hp = 5;
-        this.damage = 10;
+        super('enemy_100x130px.png', x, y);
+        this.speed = 0.03 + Math.random() * 0.03;
+        this.sideSpeed = 0.02 + Math.random() * 0.02;
+        this.hp = 10;
+        this.damage = 20;
         this.scores = this.hp * 5;
-        this.size = 24;
+        this.size = 46;
 
         this.bulletSpeed = 0.2;
         this.bulletDamage = 5;
-        this.shutTimeout = 2000 + Math.floor(Math.random() * 1000);
+        this.shutTimeout = 1000 + Math.floor(Math.random() * 1000);
         this.shutTime = this.shutTimeout;
 
         this.isExist = true;
@@ -47,10 +48,19 @@ class SimpleEnemy extends Sprite {
     update(dt) {
         // move
         this.centerY += this.speed * dt;
+        if (this.centerX !== player.centerX) {
+            let speedX = this.sideSpeed * dt;
+            if (Math.abs(this.centerX - player.centerX) > speedX) {
+                if (this.centerX > player.centerX) this.centerX -= speedX;
+                else this.centerX += speedX;
+            } else {
+                this.centerX = player.centerX;
+            }
+        }
 
         // attack
         this.shutTime -= dt;
-        if (this.shutTime <= 0 && this.centerY > 0) {
+        if (this.shutTime <= 0) {
             this.shutTime += this.shutTimeout;
             const bullet = new EnemyBullet(this.centerX, this.centerY, this.bulletSpeed, this.bulletDamage);
             enemiesBulletsArr.push(bullet);
@@ -97,4 +107,4 @@ class SimpleEnemy extends Sprite {
     }
 }
 
-export default SimpleEnemy;
+export default HeavyEnemy;

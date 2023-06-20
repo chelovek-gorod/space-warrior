@@ -51,7 +51,7 @@ function animation(timeStamp) {
 
     if (isPerformanceDisplay) counterPerformance.start();
 
-    update(dt);
+    if (update) update(dt);
 
     if (isPerformanceDisplay) counterPerformance.update(dt);
 

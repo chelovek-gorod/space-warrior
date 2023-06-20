@@ -92,9 +92,9 @@ export function drawLightning(object, target, color=null) {
     let yy = object.centerY
 
     canvas.context.save();
-    canvas.context.lineWidth = 1;
+    canvas.context.lineWidth = 2;
     canvas.context.strokeStyle = lineColor;
-    canvas.context.shadowBlur  = 5;
+    canvas.context.shadowBlur  = 6;
     canvas.context.shadowColor = lineColor;
     canvas.context.globalCompositeOperation = 'lighter';
     canvas.context.beginPath();

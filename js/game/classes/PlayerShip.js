@@ -23,6 +23,7 @@ class PlayerShip extends Spritesheet {
         this.shutTimeout = 1200;
         this.shutTime = this.shutTimeout;
         this.bulletSpeed = 1.8;
+        this.bulletDamage = 3;
         this.bulletsArr = [];
 
         this.rockets = 1;
@@ -64,7 +65,7 @@ class PlayerShip extends Spritesheet {
         this.shutTime -= dt;
         if (this.shutTime <= 0) {
             this.shutTime += this.shutTimeout;
-            const bullet = new PlayerBullet(this.centerX, this.centerY, this.bulletSpeed);
+            const bullet = new PlayerBullet(this.centerX, this.centerY, this.bulletSpeed, this.bulletDamage);
             this.bulletsArr.push( bullet );
             playSound('se_laser_shut.mp3');
         }

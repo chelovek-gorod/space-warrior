@@ -57,6 +57,7 @@ class Rock extends Spritesheet {
             return;
         }
 
+        // test out of screen
         if (this.centerY - this.halfHeight > canvas.height
         || this.centerY + this.halfHeight < 0
         || this.centerX - this.halfWidth > canvas.width

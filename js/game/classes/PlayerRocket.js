@@ -1,18 +1,18 @@
 import Sprite from "../../engine/classes/Sprite.js";
-import {player, asteroidsArr, oneLoopObjectsArr} from "../main.js";
+import {player, asteroidsArr, oneLoopObjectsArr, enemiesArr} from "../main.js";
 import { getDistance, turnTo, moveAccordingDirection } from "../../engine/gameFunctions.js";
 import { playSound } from "../../engine/sound.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
 import canvas from "../../engine/canvas.js";
 
 class PlayerRocket extends Sprite {
-    constructor(x, y, speed, acceleration, turnSpeed, power) {
+    constructor(x, y, speed, acceleration, turnSpeed, damage) {
         super('player_rocket_30x12px.png', x, y);
         this.direction = -Math.PI / 2;
         this.speed = speed;
         this.acceleration = acceleration;
         this.turnSpeed = turnSpeed;
-        this.power = power;
+        this.damage = damage;
         this.size = 12;
 
         this.addSmokeTimeout = 60;
@@ -28,6 +28,13 @@ class PlayerRocket extends Sprite {
             let distance = getDistance(this, asteroidsArr[i]);
             if (distance < minDistance) {
                 target = asteroidsArr[i];
+                minDistance = distance;
+            }
+        }
+        for (let i = 0; i < enemiesArr.length; i++) {
+            let distance = getDistance(this, enemiesArr[i]);
+            if (distance < minDistance) {
+                target = enemiesArr[i];
                 minDistance = distance;
             }
         }
