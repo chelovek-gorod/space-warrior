@@ -23,7 +23,7 @@ class PlayerShip extends Spritesheet {
         this.shutTimeout = 1200;
         this.shutTime = this.shutTimeout;
         this.bulletSpeed = 1.8;
-        this.bulletDamage = 3;
+        this.bulletDamage = 10;
         this.bulletsArr = [];
 
         this.rockets = 1;
@@ -32,7 +32,7 @@ class PlayerShip extends Spritesheet {
         this.rocketStartSpeed = 0.1;
         this.rocketAcceleration = 1.02;
         this.rocketTurnSpeed = 0.05;
-        this.rocketPower = 5;
+        this.rocketDamage = 30;
         this.rocketsArr = [];
     }
 
@@ -82,7 +82,7 @@ class PlayerShip extends Spritesheet {
                 this.centerX, this.centerY,
                 this.rocketStartSpeed, this.rocketAcceleration,
                 this.rocketTurnSpeed,
-                this.rocketPower);
+                this.rocketDamage);
             this.rocketsArr.push( rocket );
             playSound('se_rocket_launch.mp3');
         }

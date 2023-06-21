@@ -1,6 +1,6 @@
 import Spritesheet from "../../engine/classes/Spritesheet.js";
 import canvas from "../../engine/canvas.js";
-import { player, oneLoopObjectsArr } from "../main.js";
+import { player, oneLoopObjectsArr, enemiesArr } from "../main.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
 import { playSound } from '../../engine/sound.js';
 import { getDistance, moveAccordingDirection } from '../../engine/gameFunctions.js';
@@ -16,7 +16,7 @@ class Rock extends Spritesheet {
         this.isExist = true;
     }
 
-    getDamage() {
+    addDamage() {
         this.isExist = false;
         let explosion = new OneLoopSpritesheet(
             'explosion_64x64px_17frames.png',
@@ -29,12 +29,21 @@ class Rock extends Spritesheet {
     update(dt) {
         moveAccordingDirection( this, this.speed * dt );
 
+        // test collision with enemies
+        for(let i = 0; i < enemiesArr.length; i++){
+            if(getDistance(this, enemiesArr[i]) < this.size + enemiesArr[i].size) {
+                enemiesArr[i].addDamage(this.damage, this);
+                this.isExist = false;
+                return;
+            }
+        }
+
         // test collision with player bullet
         for(let i = 0; i < player.bulletsArr.length; i++) {
             if(getDistance(this, player.bulletsArr[i]) < this.size) {
                 player.bulletsArr[i].isExist = false;
-                this.getDamage()
-                player.addScores(2);
+                player.addScores(5);
+                this.addDamage();
                 return;
             }
         }
@@ -44,8 +53,7 @@ class Rock extends Spritesheet {
             if(getDistance(this, player.rocketsArr[i]) < this.size) {
                 player.rockets++;
                 player.rocketsArr[i].isExist = false;
-                this.getDamage()
-                player.addScores(1);
+                this.addDamage();
                 return;
             }
         }
@@ -53,7 +61,7 @@ class Rock extends Spritesheet {
         // test collision with player
         if(getDistance(this, player) < this.size + player.size) {
             player.addDamage(this.damage);
-            this.getDamage()
+            this.addDamage();
             return;
         }
 

@@ -10,9 +10,10 @@ class SimpleEnemy extends Sprite {
     constructor(x, y) {
         super('enemy_52x78px.png', x, y);
         this.speed = 0.04 + Math.random() * 0.04;
-        this.hp = 5;
-        this.damage = 10;
-        this.scores = this.hp * 5;
+        this.sideSpeed = -0.02 + Math.random() * 0.04;
+        this.hp = 20;
+        this.damage = 20;
+        this.scores = this.hp;
         this.size = 24;
 
         this.bulletSpeed = 0.2;
@@ -23,12 +24,12 @@ class SimpleEnemy extends Sprite {
         this.isExist = true;
     }
 
-    getDamage( damage, damageFromObject ) {
+    addDamage( damage, object ) {
         this.hp -= damage;
         if (this.hp > 0) {
             let explosion = new OneLoopSpritesheet(
                 'explosion_64x64px_17frames.png',
-                damageFromObject.centerX, damageFromObject.centerY,
+                object.centerX, object.centerY,
                 64, 64, 17, 30);
             oneLoopObjectsArr.push(explosion);
             playSound('se_small_explosion.mp3');
@@ -47,10 +48,11 @@ class SimpleEnemy extends Sprite {
     update(dt) {
         // move
         this.centerY += this.speed * dt;
+        this.centerX += this.sideSpeed * dt;
 
         // attack
-        this.shutTime -= dt;
-        if (this.shutTime <= 0 && this.centerY > 0) {
+        if (this.centerY > 0) this.shutTime -= dt;
+        if (this.shutTime <= 0) {
             this.shutTime += this.shutTimeout;
             const bullet = new EnemyBullet(this.centerX, this.centerY, this.bulletSpeed, this.bulletDamage);
             enemiesBulletsArr.push(bullet);
@@ -60,7 +62,7 @@ class SimpleEnemy extends Sprite {
         for(let i = 0; i < player.bulletsArr.length; i++) {
             if(getDistance(this, player.bulletsArr[i]) < this.size) {
                 player.bulletsArr[i].isExist = false;
-                this.getDamage( 1, player.bulletsArr[i] )
+                this.addDamage( player.bulletsArr[i].damage, player.bulletsArr[i] );
                 if (this.hp > 0) player.addScores(1);
                 else {
                     player.addScores(this.scores);
@@ -74,7 +76,7 @@ class SimpleEnemy extends Sprite {
             if(getDistance(this, player.rocketsArr[i]) < this.size) {
                 player.rockets++;
                 player.rocketsArr[i].isExist = false;
-                this.getDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
+                this.addDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
                 if (this.hp <= 0) {
                     player.addScores(Math.floor(this.scores / 2));
                     return;
@@ -85,7 +87,7 @@ class SimpleEnemy extends Sprite {
         // test collision with player
         if(getDistance(this, player) < this.size + player.size) {
             player.addDamage(this.damage);
-            this.getDamage( this.hp, player )
+            this.addDamage(this.hp);
             return;
         }
 

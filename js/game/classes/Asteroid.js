@@ -7,24 +7,24 @@ import { getDistance } from '../../engine/gameFunctions.js';
 import Rock from "./Rock.js";
 
 class Asteroid extends Spritesheet {
-    constructor(x, y, speed) {
+    constructor(x, y) {
         super('asteroid_white_90x108px_29frames.png', x, y, 90, 108, 29, 30);
-        this.speed = speed;
         this.direction = Math.random() * (Math.PI * 2);
-        this.sideSpeed = ((Math.random() < 0.5) ? -speed : speed) * Math.random() / 2;
-        this.hp = 1 + Math.ceil(Math.random()*2);
-        this.damage = this.hp * 10;
-        this.scores = this.hp * 5;
+        this.speed = 0.04 + Math.random() * 0.04;
+        this.sideSpeed = -(this.speed / 2) + Math.random() * this.speed;
+        this.hp = 10 + Math.ceil(Math.random()*20);
+        this.damage = this.hp;
+        this.scores = this.hp;
         this.size = 36;
         this.isExist = true;
     }
 
-    getDamage( damage, damageFromObject ) {
+    addDamage( damage, object ) {
         this.hp -= damage;
         if (this.hp > 0) {
             let explosion = new OneLoopSpritesheet(
                 'explosion_64x64px_17frames.png',
-                damageFromObject.centerX, damageFromObject.centerY,
+                object.centerX, object.centerY,
                 64, 64, 17, 30);
             oneLoopObjectsArr.push(explosion);
             playSound('se_small_explosion.mp3');
@@ -37,7 +37,7 @@ class Asteroid extends Spritesheet {
                 200, 200, 18, 30);
             oneLoopObjectsArr.push(explosion);
             playSound('se_explosion.mp3');
-            if (damageFromObject !== player) this.generateRocks();
+            if (object !== player) this.generateRocks();
         }
     }
 
@@ -54,11 +54,20 @@ class Asteroid extends Spritesheet {
         this.centerY += this.speed * dt;
         this.centerX += this.sideSpeed * dt;
 
+        // test collision with rock
+        for(let i = 0; i < rocksArr.length; i++) {
+            if(getDistance(this, rocksArr[i]) < this.size + rocksArr[i].size) {
+                rocksArr[i].isExist = false;
+                this.addDamage( rocksArr[i].damage, rocksArr[i] )
+                if (this.hp <= 0) return;
+            }
+        }
+
         // test collision with player bullet
         for(let i = 0; i < player.bulletsArr.length; i++) {
             if(getDistance(this, player.bulletsArr[i]) < this.size) {
                 player.bulletsArr[i].isExist = false;
-                this.getDamage( 1, player.bulletsArr[i] )
+                this.addDamage( player.bulletsArr[i].damage, player.bulletsArr[i] )
                 if (this.hp > 0) player.addScores(1);
                 else {
                     player.addScores(this.scores);
@@ -72,7 +81,7 @@ class Asteroid extends Spritesheet {
             if(getDistance(this, player.rocketsArr[i]) < this.size) {
                 player.rockets++;
                 player.rocketsArr[i].isExist = false;
-                this.getDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
+                this.addDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
                 if (this.hp <= 0) {
                     player.addScores(Math.floor(this.scores / 2));
                     return;
@@ -83,7 +92,7 @@ class Asteroid extends Spritesheet {
         // test collision with player
         if(getDistance(this, player) < this.size + player.size) {
             player.addDamage(this.damage);
-            this.getDamage( this.hp, player )
+            this.addDamage(this.hp, player);
             return;
         }
 

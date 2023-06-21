@@ -11,15 +11,15 @@ class LightningEnemy extends Sprite {
         this.speed = 0.02 + Math.random() * 0.02;
         this.sideSpeed = 0.015 + Math.random() * 0.015;
         this.rotationSpeed = this.speed * 0.5;
-        this.hp = 30;
-        this.damage = 30;
-        this.scores = this.hp * 5;
+        this.hp = 70;
+        this.damage = 40;
+        this.scores = this.hp;
         this.size = 52;
 
-        this.shutDistance = 500;
+        this.shutDistance = 320;
         this.shutDurationTimeout = 500;
         this.shutDurationTime = this.shutDurationTimeout;
-        this.shutDamage = 0.01;
+        this.shutDamage = 0.06;
         this.shutDamageStorage = 0;
         this.shutTimeout = 2000 + Math.floor(Math.random() * 1000);
         this.shutTime = this.shutTimeout;
@@ -27,12 +27,12 @@ class LightningEnemy extends Sprite {
         this.isExist = true;
     }
 
-    getDamage( damage, damageFromObject ) {
+    addDamage( damage, object ) {
         this.hp -= damage;
         if (this.hp > 0) {
             let explosion = new OneLoopSpritesheet(
                 'explosion_64x64px_17frames.png',
-                damageFromObject.centerX, damageFromObject.centerY,
+                object.centerX, object.centerY,
                 64, 64, 17, 30);
             oneLoopObjectsArr.push(explosion);
             playSound('se_small_explosion.mp3');
@@ -62,17 +62,19 @@ class LightningEnemy extends Sprite {
             }
         }
 
+        if (this.centerY + this.halfHeight < 0) return;
+
         // attack
         if (this.shutTime > 0) this.shutTime -= dt;
         else if (getDistance(this, player) <= this.shutDistance) {
             if (this.shutDurationTime > 0) {
                 this.shutDurationTime -= dt;
-                this.shutDamageStorage += dt * this.shutDamage;
+                this.shutDamageStorage += this.shutDamage * dt;
                 drawLightning(this, player);
                 if (this.shutDamageStorage > 1) {
                     let damage = +this.shutDamageStorage.toFixed();
                     player.addDamage(damage);
-                    this.shutDamageStorage =- damage;
+                    this.shutDamageStorage -= damage;
                 }
             } else {
                 this.shutTime += this.shutTimeout;
@@ -85,7 +87,7 @@ class LightningEnemy extends Sprite {
         for(let i = 0; i < player.bulletsArr.length; i++) {
             if(getDistance(this, player.bulletsArr[i]) < this.size) {
                 player.bulletsArr[i].isExist = false;
-                this.getDamage( 1, player.bulletsArr[i] )
+                this.addDamage( player.bulletsArr[i].damage, player.bulletsArr[i] );
                 if (this.hp > 0) player.addScores(1);
                 else {
                     player.addScores(this.scores);
@@ -99,7 +101,7 @@ class LightningEnemy extends Sprite {
             if(getDistance(this, player.rocketsArr[i]) < this.size) {
                 player.rockets++;
                 player.rocketsArr[i].isExist = false;
-                this.getDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
+                this.addDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
                 if (this.hp <= 0) {
                     player.addScores(Math.floor(this.scores / 2));
                     return;
@@ -110,7 +112,7 @@ class LightningEnemy extends Sprite {
         // test collision with player
         if(getDistance(this, player) < this.size + player.size) {
             player.addDamage(this.damage);
-            this.getDamage( this.hp, player )
+            this.addDamage(this.hp);
             return;
         }
 

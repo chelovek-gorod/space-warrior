@@ -22,6 +22,7 @@ class PlayerRocket extends Sprite {
     }
 
     update(dt) {
+        // get target
         let target = null;
         let minDistance = Infinity;
         for (let i = 0; i < asteroidsArr.length; i++) {
@@ -54,6 +55,7 @@ class PlayerRocket extends Sprite {
             return;
         }
 
+        // test out of screen
         if (this.centerY < -this.halfHeight || this.centerY + this.halfHeight > canvas.height
         || this.centerX < -this.halfHeight|| this.centerX + this.halfHeight > canvas.width) {
             player.rockets++;
@@ -61,6 +63,7 @@ class PlayerRocket extends Sprite {
             return;
         }
 
+        // smoke
         this.addSmokeTime -= dt;
         if (this.addSmokeTime < 0) {
             this.addSmokeTime = this.addSmokeTimeout;
@@ -74,6 +77,7 @@ class PlayerRocket extends Sprite {
 
         this.draw();
 
+        // update speed and smoke timeout
         this.addSmokeTimeout /= this.acceleration;
         this.speed *= this.acceleration;
     }

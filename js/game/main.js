@@ -54,7 +54,7 @@ loader(sources, init);
 */
 
 let gameDeveloperLogo, gameTitleText, gameDescriptionText, startGameText, gameOverText;
-let isGameStart = true;
+let isGameStart = false;
 let checkStartGameTimeout = 11000;
 
 let scrollingBackground, smallGalaxyBackgroundLeft, smallGalaxyBackgroundRight,
@@ -68,15 +68,14 @@ function addToMaxAsteroids() { maxAsteroidsOnScreen += 0.2 };
 function createAsteroid() {
     let xx = Math.random() * canvas.width;
     let yy = -Math.random() * canvas.centerX;
-    let speed = +((3 + Math.random() * 5) / 50).toFixed(2);
-    asteroidsArr.push( new Asteroid(xx, yy, speed));
+    asteroidsArr.push( new Asteroid(xx, yy));
 }
 
 let rocksArr = [];
 
 let enemiesArr = [];
 let maxEnemiesOnScreen = 2;
-function addToMaxEnemies() { maxEnemiesOnScreen += 0.2 };
+function addToMaxEnemies() { maxEnemiesOnScreen += 0.1 };
 function createEnemy() {
     let enemy; // SimpleEnemy, HeavyEnemy, FollowEnemy, LightningEnemy
     let xx = Math.random() * canvas.width;
@@ -87,7 +86,7 @@ function createEnemy() {
             enemy = new SimpleEnemy(xx, yy);
         break;
         case 1 :
-            enemy = new SimpleEnemy(xx, yy);
+            enemy = new HeavyEnemy(xx, yy);
         break;
         case 2 :
             enemy = new HeavyEnemy(xx, yy);
