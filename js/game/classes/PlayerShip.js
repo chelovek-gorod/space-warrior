@@ -27,7 +27,7 @@ class PlayerShip extends Spritesheet {
         this.bulletsArr = [];
 
         this.rockets = 1;
-        this.rocketLaunchTimeout = 1000;
+        this.rocketLaunchTimeout = 1200;
         this.rocketLaunchTime = this.rocketLaunchTimeout;
         this.rocketStartSpeed = 0.1;
         this.rocketAcceleration = 1.02;

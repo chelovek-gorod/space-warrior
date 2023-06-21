@@ -1,9 +1,10 @@
 import Spritesheet from "../../engine/classes/Spritesheet.js";
 import canvas from "../../engine/canvas.js";
-import { player, oneLoopObjectsArr, enemiesArr } from "../main.js";
+import { player, messagesArr, oneLoopObjectsArr, enemiesArr } from "../main.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
 import { playSound } from '../../engine/sound.js';
 import { getDistance, moveAccordingDirection } from '../../engine/gameFunctions.js';
+import MessageText from "./MessageText.js";
 
 class Rock extends Spritesheet {
     constructor(x, y, speed, direction) {
@@ -43,6 +44,7 @@ class Rock extends Spritesheet {
             if(getDistance(this, player.bulletsArr[i]) < this.size) {
                 player.bulletsArr[i].isExist = false;
                 player.addScores(5);
+                messagesArr.push( new MessageText('✛5 SCORES', this.centerX, this.centerY) );
                 this.addDamage();
                 return;
             }

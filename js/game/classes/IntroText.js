@@ -44,19 +44,13 @@ class IntroText extends Text {
                 }
         }
 
-        if (this.alpha < 1) {
-            canvas.context.save();
-            canvas.context.globalAlpha = this.alpha;
-        }
-
         canvas.context.save();
+        if (this.alpha < 1) canvas.context.globalAlpha = this.alpha;
         canvas.context.shadowBlur  = 5;
         canvas.context.shadowColor = this.shadowColor;
         canvas.context.globalCompositeOperation = 'lighter';
         this.draw();
         canvas.context.restore();
-        
-        if (this.alpha < 1) canvas.context.restore();
     }
 }
 

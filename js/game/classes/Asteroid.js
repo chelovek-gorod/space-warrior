@@ -1,10 +1,11 @@
 import Spritesheet from "../../engine/classes/Spritesheet.js";
 import canvas from "../../engine/canvas.js";
-import { player, oneLoopObjectsArr, addToMaxAsteroids, rocksArr } from "../main.js";
+import { player, messagesArr, oneLoopObjectsArr, addToMaxAsteroids, rocksArr } from "../main.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
 import { playSound } from '../../engine/sound.js';
 import { getDistance } from '../../engine/gameFunctions.js';
 import Rock from "./Rock.js";
+import MessageText from "./MessageText.js";
 
 class Asteroid extends Spritesheet {
     constructor(x, y) {
@@ -13,8 +14,8 @@ class Asteroid extends Spritesheet {
         this.speed = 0.04 + Math.random() * 0.04;
         this.sideSpeed = -(this.speed / 2) + Math.random() * this.speed;
         this.hp = 10 + Math.ceil(Math.random()*20);
-        this.damage = this.hp;
-        this.scores = this.hp;
+        this.damage = 20;
+        this.scores = 20;
         this.size = 36;
         this.isExist = true;
     }
@@ -68,9 +69,12 @@ class Asteroid extends Spritesheet {
             if(getDistance(this, player.bulletsArr[i]) < this.size) {
                 player.bulletsArr[i].isExist = false;
                 this.addDamage( player.bulletsArr[i].damage, player.bulletsArr[i] )
-                if (this.hp > 0) player.addScores(1);
-                else {
+                if (this.hp > 0) {
+                    player.addScores(1);
+                    messagesArr.push( new MessageText('✛1 SCORE', this.centerX, this.centerY) );
+                } else {
                     player.addScores(this.scores);
+                    messagesArr.push( new MessageText('✛' + this.scores + ' SCORES', this.centerX, this.centerY) );
                     return;
                 }
             }
@@ -83,7 +87,9 @@ class Asteroid extends Spritesheet {
                 player.rocketsArr[i].isExist = false;
                 this.addDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
                 if (this.hp <= 0) {
-                    player.addScores(Math.floor(this.scores / 2));
+                    let scores = Math.floor(this.scores / 2);
+                    player.addScores(scores);
+                    messagesArr.push( new MessageText('✛' + scores + ' SCORES', this.centerX, this.centerY) );
                     return;
                 }
             }

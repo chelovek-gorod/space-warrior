@@ -1,9 +1,10 @@
 import Sprite from "../../engine/classes/Sprite.js";
 import canvas from "../../engine/canvas.js";
-import { player } from "../main.js";
+import { player, messagesArr } from "../main.js";
 import { playSound } from '../../engine/sound.js';
 import { getDistance } from '../../engine/gameFunctions.js';
 import { IMG } from "../../engine/loader.js";
+import MessageText from "./MessageText.js";
 
 class Bonus extends Sprite {
     constructor(x, y) {
@@ -31,13 +32,30 @@ class Bonus extends Sprite {
         // test collision with player
         if(getDistance(this, player) < this.size + player.size) {
             this.isExist = false;
+            let textMessage;
             switch(this.type) {
-                case 'bullets' : player.shutTimeout *= 0.8; break;
-                case 'rockets' : player.rockets += 1; break;
-                case 'repair' : player.addDamage(-20); break;
-                case 'speed' : player.speed *= 1.2; break;
-                default: /*'scores'*/ player.addScores(50);
+                case 'bullets' :
+                    player.shutTimeout *= 0.9;
+                    textMessage = 'SHUT SPEED ✛10%';
+                break;
+                case 'rockets' :
+                    player.rockets += 1;
+                    player.rocketLaunchTimeout *= 0.9;
+                    textMessage = '✛1 ROCKET';
+                break;
+                case 'repair' :
+                    player.addDamage(-10);
+                    textMessage = '✛10 HP';
+                    break;
+                case 'speed' :
+                    player.speed *= 1.1;
+                    textMessage = 'SPEED ✛10%';
+                    break;
+                default: /*'scores'*/
+                    player.addScores(50);
+                    textMessage = '✛50 SCORES';
             }
+            messagesArr.push( new MessageText(textMessage, this.centerX, this.centerY) );
             playSound('se_bonus.mp3');
             return;
         }

@@ -66,6 +66,8 @@ let smokeArr = [];
 
 let bonusesArr = [];
 
+let messagesArr = [];
+
 let asteroidsArr = [];
 let maxAsteroidsOnScreen = 3;
 function addToMaxAsteroids() { maxAsteroidsOnScreen += 0.2 };
@@ -238,9 +240,13 @@ function update(dt) {
     if (player.hp > 0) player.update(dt);
     else gameOverText.update(dt);
 
-    // update explosions and smokes
+    // update explosions
     for (let i = 0; i < oneLoopObjectsArr.length; i++) oneLoopObjectsArr[i].update(dt);
     oneLoopObjectsArr = getExistsObjectsFromArr( oneLoopObjectsArr );
+
+    // update messages
+    for (let i = 0; i < messagesArr.length; i++) messagesArr[i].update(dt);
+    messagesArr = getExistsObjectsFromArr( messagesArr );
 
     // update player info
     player.scoresText.draw();
@@ -250,5 +256,5 @@ function update(dt) {
 export {
     CURSOR, gameCursor, player, bonusesArr, oneLoopObjectsArr,
     addToMaxAsteroids, asteroidsArr, rocksArr, smokeArr,
-    addToMaxEnemies, enemiesArr, enemiesBulletsArr
+    addToMaxEnemies, enemiesArr, enemiesBulletsArr, messagesArr
 };

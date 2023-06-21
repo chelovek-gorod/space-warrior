@@ -1,13 +1,9 @@
-import Sprite from "../../engine/classes/Sprite.js";
+import EnemyShipPrototype from "./EnemyShipPrototype.js";
 import canvas from "../../engine/canvas.js";
-import { player, bonusesArr, oneLoopObjectsArr, addToMaxEnemies, enemiesBulletsArr } from "../main.js";
-import OneLoopSpritesheet from './OneLoopSpritesheet.js';
-import { playSound } from '../../engine/sound.js';
-import { getDistance } from '../../engine/gameFunctions.js';
+import { player, enemiesBulletsArr } from "../main.js";
 import EnemyBullet from "./EnemyBullet.js";
-import Bonus from "./Bonus.js";
 
-class HeavyEnemy extends Sprite {
+class HeavyEnemy extends EnemyShipPrototype {
     constructor(x, y) {
         super('enemy_100x130px.png', x, y);
         this.speed = 0.03 + Math.random() * 0.03;
@@ -22,28 +18,9 @@ class HeavyEnemy extends Sprite {
         this.shutTimeout = 1000 + Math.floor(Math.random() * 1000);
         this.shutTime = this.shutTimeout;
 
-        this.isExist = true;
-    }
+        this.isWithBonus = true;
 
-    addDamage( damage, object ) {
-        this.hp -= damage;
-        if (this.hp > 0) {
-            let explosion = new OneLoopSpritesheet(
-                'explosion_64x64px_17frames.png',
-                object.centerX, object.centerY,
-                64, 64, 17, 30);
-            oneLoopObjectsArr.push(explosion);
-            playSound('se_small_explosion.mp3');
-        } else {
-            this.isExist = false;
-            addToMaxEnemies();
-            let explosion = new OneLoopSpritesheet(
-                'explosion_200x200px_18frames.png',
-                this.centerX, this.centerY,
-                200, 200, 18, 30);
-            oneLoopObjectsArr.push(explosion);
-            playSound('se_explosion.mp3');
-        }
+        this.isExist = true;
     }
 
     update(dt) {
@@ -67,39 +44,7 @@ class HeavyEnemy extends Sprite {
             enemiesBulletsArr.push(bullet);
         }
 
-        // test collision with player bullet
-        for(let i = 0; i < player.bulletsArr.length; i++) {
-            if(getDistance(this, player.bulletsArr[i]) < this.size) {
-                player.bulletsArr[i].isExist = false;
-                this.addDamage( player.bulletsArr[i].damage, player.bulletsArr[i] )
-                if (this.hp > 0) player.addScores(1);
-                else {
-                    player.addScores(this.scores);
-                    bonusesArr.push( new Bonus(this.centerX, this.centerY) );
-                    return;
-                }
-            }
-        }
-
-        // test collision with player rocket
-        for(let i = 0; i < player.rocketsArr.length; i++) {
-            if(getDistance(this, player.rocketsArr[i]) < this.size) {
-                player.rockets++;
-                player.rocketsArr[i].isExist = false;
-                this.addDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
-                if (this.hp <= 0) {
-                    player.addScores(Math.floor(this.scores / 2));
-                    return;
-                }
-            }
-        }
-
-        // test collision with player
-        if(getDistance(this, player) < this.size + player.size) {
-            player.addDamage(this.damage);
-            this.addDamage(this.hp);
-            return;
-        }
+        if ( this.isOnCollision() ) return;
 
         // test out of screen (except top border)
         if (this.centerY - this.halfHeight > canvas.height

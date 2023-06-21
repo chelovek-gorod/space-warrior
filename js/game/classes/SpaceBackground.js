@@ -10,12 +10,13 @@ function getRestProperties( imageHeight ) {
 class SpaceBackground extends TileSprite {
     constructor( imageName, imageHeight, scrollSpeed ) {
         super(imageName, 0, ...getRestProperties( imageHeight ));
-        this.restartY = this.y;
+        this.restartY = this.tile.height;
+        this.endPointY = this.y + this.tile.height;
         this.scrollSpeed = scrollSpeed;
     }
     update(dt) {
         this.y += this.scrollSpeed * dt;
-        if (this.y > 0) this.y -= this.restartY;
+        if (this.y > this.endPointY) this.y -= this.restartY;
         this.draw();
     }
 }
