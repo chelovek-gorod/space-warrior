@@ -1,10 +1,11 @@
 import Sprite from "../../engine/classes/Sprite.js";
 import canvas from "../../engine/canvas.js";
-import { player, oneLoopObjectsArr, addToMaxEnemies, enemiesBulletsArr } from "../main.js";
+import { player, bonusesArr, oneLoopObjectsArr, addToMaxEnemies, enemiesBulletsArr } from "../main.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
 import { playSound } from '../../engine/sound.js';
 import { getDistance } from '../../engine/gameFunctions.js';
 import EnemyBullet from "./EnemyBullet.js";
+import Bonus from "./Bonus.js";
 
 class HeavyEnemy extends Sprite {
     constructor(x, y) {
@@ -74,6 +75,7 @@ class HeavyEnemy extends Sprite {
                 if (this.hp > 0) player.addScores(1);
                 else {
                     player.addScores(this.scores);
+                    bonusesArr.push( new Bonus(this.centerX, this.centerY) );
                     return;
                 }
             }

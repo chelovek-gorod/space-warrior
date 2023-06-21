@@ -9,6 +9,7 @@ const sources = {
             'black_hole_right_320x320px.png',
             'galaxy_480x420px.png',
             'planets_920x760px.png',
+            'planet_604x588px.png',
         
             'player_74x100px_16frames.png',
             'player_bullet_10x40px.png',

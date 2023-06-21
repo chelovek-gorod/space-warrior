@@ -1,9 +1,10 @@
 import Sprite from "../../engine/classes/Sprite.js";
 import canvas from "../../engine/canvas.js";
-import { player, oneLoopObjectsArr, addToMaxEnemies } from "../main.js";
+import { player, bonusesArr, oneLoopObjectsArr, addToMaxEnemies } from "../main.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
 import { playSound } from '../../engine/sound.js';
 import { getDistance, drawLightning } from '../../engine/gameFunctions.js';
+import Bonus from "./Bonus.js";
 
 class LightningEnemy extends Sprite {
     constructor(x, y) {
@@ -62,8 +63,6 @@ class LightningEnemy extends Sprite {
             }
         }
 
-        if (this.centerY + this.halfHeight < 0) return;
-
         // attack
         if (this.shutTime > 0) this.shutTime -= dt;
         else if (getDistance(this, player) <= this.shutDistance) {
@@ -80,7 +79,6 @@ class LightningEnemy extends Sprite {
                 this.shutTime += this.shutTimeout;
                 this.shutDurationTime += this.shutDurationTimeout;
             }
-
         }
 
         // test collision with player bullet
@@ -91,6 +89,7 @@ class LightningEnemy extends Sprite {
                 if (this.hp > 0) player.addScores(1);
                 else {
                     player.addScores(this.scores);
+                    bonusesArr.push( new Bonus(this.centerX, this.centerY) );
                     return;
                 }
             }

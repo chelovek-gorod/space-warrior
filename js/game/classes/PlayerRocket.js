@@ -1,5 +1,5 @@
 import Sprite from "../../engine/classes/Sprite.js";
-import {player, asteroidsArr, oneLoopObjectsArr, enemiesArr} from "../main.js";
+import {player, asteroidsArr, oneLoopObjectsArr, smokeArr, enemiesArr} from "../main.js";
 import { getDistance, turnTo, moveAccordingDirection } from "../../engine/gameFunctions.js";
 import { playSound } from "../../engine/sound.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
@@ -72,7 +72,7 @@ class PlayerRocket extends Sprite {
                 this.centerX, this.centerY,
                 32, 32, 25, 12);
             smoke.direction = Math.random() * (Math.PI * 2);
-            oneLoopObjectsArr.push(smoke);
+            smokeArr.push(smoke);
         }
 
         this.draw();

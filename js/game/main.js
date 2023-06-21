@@ -58,9 +58,13 @@ let isGameStart = false;
 let checkStartGameTimeout = 11000;
 
 let scrollingBackground, smallGalaxyBackgroundLeft, smallGalaxyBackgroundRight,
-blackHoleBackgroundLeft, blackHoleBackgroundRight, planetsBackground;
+blackHoleBackgroundLeft, blackHoleBackgroundRight, planetsBackground, redPlanetBackground;
 
 let gameCursor, player;
+
+let smokeArr = [];
+
+let bonusesArr = [];
 
 let asteroidsArr = [];
 let maxAsteroidsOnScreen = 3;
@@ -68,7 +72,7 @@ function addToMaxAsteroids() { maxAsteroidsOnScreen += 0.2 };
 function createAsteroid() {
     let xx = Math.random() * canvas.width;
     let yy = -Math.random() * canvas.centerX;
-    asteroidsArr.push( new Asteroid(xx, yy));
+    asteroidsArr.push( new Asteroid(xx, yy) );
 }
 
 let rocksArr = [];
@@ -140,6 +144,11 @@ function init() {
         canvas.centerX, -canvas.height*10,
         canvas.height * 60, 0.06, 0.0005
     );
+    redPlanetBackground = new AlternateBackground(
+        'planet_604x588px.png',
+        canvas.centerX, -canvas.height*12,
+        canvas.height * 90, 0.08, 0.0006
+    );
 
     gameDeveloperLogo = new Logo( 100, 1400, 1400);
     gameTitleText = new IntroText('Space Warrior', canvas.centerX, canvas.centerY - 80, 120, 5500, 1500, 2500);
@@ -195,8 +204,17 @@ function update(dt) {
     blackHoleBackgroundLeft.update(dt);
     blackHoleBackgroundRight.update(dt);
     planetsBackground.update(dt);
+    redPlanetBackground.update(dt);
 
     gameCursor.update(dt);
+
+    // update bonuses
+    for (let i = 0; i < bonusesArr.length; i++) bonusesArr[i].update(dt);
+    bonusesArr = getExistsObjectsFromArr( bonusesArr );
+
+    // update smoke
+    for (let i = 0; i < smokeArr.length; i++) smokeArr[i].update(dt);
+    smokeArr = getExistsObjectsFromArr( smokeArr );
 
     // update rock arr
     for (let i = 0; i < rocksArr.length; i++) rocksArr[i].update(dt);
@@ -230,7 +248,7 @@ function update(dt) {
 }
 
 export {
-    CURSOR, gameCursor, player, oneLoopObjectsArr,
-    addToMaxAsteroids, asteroidsArr, rocksArr,
+    CURSOR, gameCursor, player, bonusesArr, oneLoopObjectsArr,
+    addToMaxAsteroids, asteroidsArr, rocksArr, smokeArr,
     addToMaxEnemies, enemiesArr, enemiesBulletsArr
 };
