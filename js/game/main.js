@@ -70,7 +70,7 @@ let messagesArr = [];
 
 let asteroidsArr = [];
 let maxAsteroidsOnScreen = 3;
-function addToMaxAsteroids() { maxAsteroidsOnScreen += 0.2 };
+function addToMaxAsteroids() { maxAsteroidsOnScreen += 0.3 };
 function createAsteroid() {
     let xx = Math.random() * canvas.width;
     let yy = -Math.random() * canvas.centerX;
@@ -80,24 +80,23 @@ function createAsteroid() {
 let rocksArr = [];
 
 let enemiesArr = [];
-let maxEnemiesOnScreen = 2;
-function addToMaxEnemies() { maxEnemiesOnScreen += 0.1 };
+let maxEnemiesOnScreen = 2.5;
+function addToMaxEnemies() { maxEnemiesOnScreen += 0.2 };
 function createEnemy() {
     let enemy; // SimpleEnemy, HeavyEnemy, FollowEnemy, LightningEnemy
     let xx = Math.random() * canvas.width;
-    let yy = -Math.floor((Math.random() * canvas.height / 2) + canvas.height / 2);
+    let yy = -(Math.random() * (canvas.height / 2)) - 240;
     let type = Math.floor(Math.random() * Math.floor(maxEnemiesOnScreen));
     switch (type) {
         case 0 :
+        case 1 :
             enemy = new SimpleEnemy(xx, yy);
         break;
-        case 1 :
-            enemy = new HeavyEnemy(xx, yy);
-        break;
         case 2 :
+        case 3 :
             enemy = new HeavyEnemy(xx, yy);
         break;
-        case 3 :
+        case 4 :
             enemy = new FollowEnemy(xx, yy);
         break;
         default :
@@ -249,6 +248,7 @@ function update(dt) {
     messagesArr = getExistsObjectsFromArr( messagesArr );
 
     // update player info
+    player.propertiesText.draw();
     player.scoresText.draw();
     player.hpText.draw();
 }

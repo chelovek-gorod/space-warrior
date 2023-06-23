@@ -6,17 +6,21 @@ import EnemyBullet from "./EnemyBullet.js";
 class HeavyEnemy extends EnemyShipPrototype {
     constructor(x, y) {
         super('enemy_100x130px.png', x, y);
-        this.speed = 0.03 + Math.random() * 0.03;
+        this.speed = 0.04 + Math.random() * 0.04;
         this.sideSpeed = 0.02 + Math.random() * 0.02;
         this.hp = 40;
-        this.damage = 30;
+        this.damage = this.hp;
         this.scores = this.hp;
         this.size = 46;
 
         this.bulletSpeed = 0.2;
         this.bulletDamage = 5;
-        this.shutTimeout = 1000 + Math.floor(Math.random() * 1000);
-        this.shutTime = this.shutTimeout;
+        this.bulletsClip = 3;
+        this.bullets = this.bulletsClip;
+        this.shutTimeout = 300;
+        this.shutTime = 0;
+        this.reloadTimeout = 2000 + Math.random() * 1000;
+        this.reloadTime = this.reloadTimeout;
 
         this.isWithBonus = true;
 
@@ -37,11 +41,21 @@ class HeavyEnemy extends EnemyShipPrototype {
         }
 
         // attack
-        if (this.centerY > 0) this.shutTime -= dt;
-        if (this.shutTime <= 0) {
-            this.shutTime += this.shutTimeout;
-            const bullet = new EnemyBullet(this.centerX, this.centerY, this.bulletSpeed, this.bulletDamage);
-            enemiesBulletsArr.push(bullet);
+        this.reloadTime -= dt;
+        if (this.reloadTime <= 0) {
+            this.reloadTime += this.reloadTimeout;
+            this.bullets = this.bulletsClip;
+        }
+        if (this.bullets > 0) {
+            this.shutTime -= dt;
+            if (this.shutTime <= 0){
+                this.shutTime += this.shutTimeout;
+                this.bullets--;
+                const bullet1 = new EnemyBullet(this.centerX - 20, this.centerY, this.bulletSpeed, this.bulletDamage);
+                const bullet2 = new EnemyBullet(this.centerX + 20, this.centerY, this.bulletSpeed, this.bulletDamage);
+                enemiesBulletsArr.push(bullet1);
+                enemiesBulletsArr.push(bullet2);
+            }
         }
 
         if ( this.isOnCollision() ) return;

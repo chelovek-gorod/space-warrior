@@ -6,10 +6,10 @@ import EnemyBullet from "./EnemyBullet.js";
 class SimpleEnemy extends EnemyShipPrototype {
     constructor(x, y) {
         super('enemy_52x78px.png', x, y);
-        this.speed = 0.04 + Math.random() * 0.04;
-        this.sideSpeed = -0.02 + Math.random() * 0.04;
+        this.speed = 0.06 + Math.random() * 0.06;
+        this.sideSpeed = -0.06 + Math.random() * 0.12;
         this.hp = 20;
-        this.damage = 20;
+        this.damage = this.hp;
         this.scores = this.hp;
         this.size = 24;
 

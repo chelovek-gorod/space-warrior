@@ -6,8 +6,8 @@ import { turnTo, moveAccordingDirection } from '../../engine/gameFunctions.js';
 class FollowEnemy extends EnemyShipPrototype {
     constructor(x, y) {
         super('enemy_240x102px.png', x, y);
-        this.speed = 0.12 + Math.random() * 0.06;
-        this.turnSpeed = 0.01 + Math.random() * 0.01;
+        this.speed = 0.12 + Math.random() * 0.04;
+        this.turnSpeed = 0.01;
         this.hp = 30;
         this.damage = this.hp;
         this.scores = this.hp;

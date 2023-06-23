@@ -15,25 +15,35 @@ class PlayerShip extends Spritesheet {
         super('player_74x100px_16frames.png', canvas.centerX, canvas.height + 50, 74, 100, 16, 30);
         this.hp = 100;
         this.scores = 0;
-        this.speed = 1.2;
+        this.speed = 0.08;
         this.hpText = new Text('HP: 100%', 6, 6, {size: 20, font: 'MicraDi', color: '#ffffff', align: 'left'});
         this.scoresText = new Text('Scores: 0', canvas.width - 6, 6, {size: 20, font: 'MicraDi', color: '#ffffff', align: 'right' });
         this.size = 32;
 
-        this.shutTimeout = 1200;
-        this.shutTime = this.shutTimeout;
-        this.bulletSpeed = 1.8;
+        this.bulletSpeed = 1.6;
         this.bulletDamage = 10;
+        this.bulletsClip = 1;
+        this.bullets = this.bulletsClip;
+        this.shutTimeout = 200;
+        this.shutTime = 0;
+        this.reloadTimeout = 2000;
+        this.reloadTime = this.reloadTimeout;
         this.bulletsArr = [];
 
         this.rockets = 1;
-        this.rocketLaunchTimeout = 1200;
+        this.maxRockets = this.rockets;
+        this.rocketLaunchTimeout = 2000;
         this.rocketLaunchTime = this.rocketLaunchTimeout;
         this.rocketStartSpeed = 0.1;
         this.rocketAcceleration = 1.02;
         this.rocketTurnSpeed = 0.05;
         this.rocketDamage = 30;
         this.rocketsArr = [];
+
+        this.propertiesText = new Text(
+            `Speed: ${(this.speed * 1000).toFixed()} | Rockets: ${this.maxRockets}`, canvas.centerX, 6, 
+            {size: 20, font: 'MicraDi', color: '#00ff00', align: 'center' }
+        );
     }
 
     addScores( scores ) {
@@ -62,13 +72,49 @@ class PlayerShip extends Spritesheet {
 
     update(dt) {
         // shuting
-        this.shutTime -= dt;
-        if (this.shutTime <= 0) {
-            this.shutTime += this.shutTimeout;
-            const bullet = new PlayerBullet(this.centerX, this.centerY, this.bulletSpeed, this.bulletDamage);
-            this.bulletsArr.push( bullet );
-            playSound('se_laser_shut.mp3');
+        this.reloadTime -= dt;
+        if (this.reloadTime <= 0) {
+            this.reloadTime += this.reloadTimeout;
+            this.bullets = this.bulletsClip;
         }
+        if (this.bullets > 0) {
+            this.shutTime -= dt;
+            if (this.shutTime <= 0){
+                this.shutTime += this.shutTimeout;
+                // 1 fire lines (1, 2, 3 bullets)
+                if (this.bulletsClip < 4) {
+                    this.bullets -= 1;
+                    this.bulletsArr.push( new PlayerBullet(this.centerX, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    playSound('se_laser_shut.mp3');
+                }
+                // 2 fire lines (4, 5, 6, 7, 8 bullets)
+                else if (this.bulletsClip < 9) {
+                    this.bullets -= 2;
+                    this.bulletsArr.push( new PlayerBullet(this.centerX - 15, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    this.bulletsArr.push( new PlayerBullet(this.centerX + 15, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    playSound('se_laser_shut.mp3');
+                }
+                // 3 fire lines (9, 10, 11, 12, 13, 14, 15 bullets)
+                else if (this.bulletsClip < 16) {
+                    this.bullets -= 3;
+                    this.bulletsArr.push( new PlayerBullet(this.centerX - 30, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    this.bulletsArr.push( new PlayerBullet(this.centerX , this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    this.bulletsArr.push( new PlayerBullet(this.centerX + 30, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    playSound('se_laser_shut.mp3');
+                }
+                // 4 fire lines (4, 5, 6, 7, 8 bullets)
+                else {
+                    this.bullets -= 4;
+                    this.bulletsArr.push( new PlayerBullet(this.centerX - 35, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    this.bulletsArr.push( new PlayerBullet(this.centerX - 10, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    this.bulletsArr.push( new PlayerBullet(this.centerX + 10, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    this.bulletsArr.push( new PlayerBullet(this.centerX + 35, this.centerY, this.bulletSpeed, this.bulletDamage) );
+                    playSound('se_laser_shut.mp3');
+                }
+                
+            }
+        }
+
 
         for(let i = 0; i < this.bulletsArr.length; i++) this.bulletsArr[i].update(dt);
         this.bulletsArr = getExistsObjectsFromArr(this.bulletsArr);
@@ -90,7 +136,7 @@ class PlayerShip extends Spritesheet {
         for(let i = 0; i < this.rocketsArr.length; i++) this.rocketsArr[i].update(dt);
         this.rocketsArr = getExistsObjectsFromArr(this.rocketsArr);
 
-        moveTo(this, gameCursor, this.speed);
+        moveTo(this, gameCursor, this.speed * dt);
         this.drawWithAnimation(dt);
     }
 }

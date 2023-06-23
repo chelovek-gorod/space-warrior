@@ -11,7 +11,7 @@ class Rock extends Spritesheet {
         super('rock_white_50x50px_8frames.png', x, y, 50, 50, 8, 18);
         this.speed = speed;
         this.direction = direction;
-        this.damage = 10;
+        this.damage = 5;
         this.scores = 5;
         this.size = 24;
         this.isExist = true;
@@ -41,7 +41,7 @@ class Rock extends Spritesheet {
 
         // test collision with player bullet
         for(let i = 0; i < player.bulletsArr.length; i++) {
-            if(getDistance(this, player.bulletsArr[i]) < this.size) {
+            if(player.bulletsArr[i].isExist && getDistance(this, player.bulletsArr[i]) < this.size) {
                 player.bulletsArr[i].isExist = false;
                 player.addScores(5);
                 messagesArr.push( new MessageText('✛5 SCORES', this.centerX, this.centerY) );
@@ -52,7 +52,7 @@ class Rock extends Spritesheet {
 
         // test collision with player rocket
         for(let i = 0; i < player.rocketsArr.length; i++) {
-            if(getDistance(this, player.rocketsArr[i]) < this.size) {
+            if(player.rocketsArr[i].isExist && getDistance(this, player.rocketsArr[i]) < this.size) {
                 player.rockets++;
                 player.rocketsArr[i].isExist = false;
                 this.addDamage();

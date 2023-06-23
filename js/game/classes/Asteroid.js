@@ -66,7 +66,7 @@ class Asteroid extends Spritesheet {
 
         // test collision with player bullet
         for(let i = 0; i < player.bulletsArr.length; i++) {
-            if(getDistance(this, player.bulletsArr[i]) < this.size) {
+            if(player.bulletsArr[i].isExist && getDistance(this, player.bulletsArr[i]) < this.size) {
                 player.bulletsArr[i].isExist = false;
                 this.addDamage( player.bulletsArr[i].damage, player.bulletsArr[i] )
                 if (this.hp > 0) {
@@ -82,7 +82,7 @@ class Asteroid extends Spritesheet {
 
         // test collision with player rocket
         for(let i = 0; i < player.rocketsArr.length; i++) {
-            if(getDistance(this, player.rocketsArr[i]) < this.size) {
+            if(player.rocketsArr[i].isExist && getDistance(this, player.rocketsArr[i]) < this.size) {
                 player.rockets++;
                 player.rocketsArr[i].isExist = false;
                 this.addDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )

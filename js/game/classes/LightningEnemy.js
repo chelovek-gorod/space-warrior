@@ -6,18 +6,18 @@ import { getDistance, drawLightning } from '../../engine/gameFunctions.js';
 class LightningEnemy extends EnemyShipPrototype {
     constructor(x, y) {
         super('enemy_120x120px.png', x, y);
-        this.speed = 0.02 + Math.random() * 0.02;
-        this.sideSpeed = 0.015 + Math.random() * 0.015;
+        this.speed = 0.03 + Math.random() * 0.03;
+        this.sideSpeed = 0.02 + Math.random() * 0.02;
         this.rotationSpeed = this.speed * 0.5;
         this.hp = 70;
-        this.damage = 40;
+        this.damage = this.hp;
         this.scores = this.hp;
         this.size = 52;
 
         this.shutDistance = (canvas.width > canvas.height) ? canvas.centerY : canvas.centerX;
         this.shutDurationTimeout = 500;
         this.shutDurationTime = this.shutDurationTimeout;
-        this.shutDamage = 0.06;
+        this.shutDamage = 0.04;
         this.shutDamageStorage = 0;
         this.shutTimeout = 2000 + Math.floor(Math.random() * 1000);
         this.shutTime = this.shutTimeout;

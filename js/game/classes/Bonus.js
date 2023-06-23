@@ -35,25 +35,28 @@ class Bonus extends Sprite {
             let textMessage;
             switch(this.type) {
                 case 'bullets' :
-                    player.shutTimeout *= 0.9;
-                    textMessage = 'SHUT SPEED ✛10%';
+                    player.bulletsClip += 1;
+                    textMessage = '✛1 SHUT';
                 break;
                 case 'rockets' :
                     player.rockets += 1;
-                    player.rocketLaunchTimeout *= 0.9;
+                    player.maxRockets += 1;
+                    player.rocketLaunchTimeout *= 0.8;
                     textMessage = '✛1 ROCKET';
+                    player.propertiesText.render(`Speed: ${(player.speed * 1000).toFixed()} | Rockets: ${player.maxRockets}`);
                 break;
                 case 'repair' :
-                    player.addDamage(-10);
-                    textMessage = '✛10 HP';
+                    player.addDamage(-20);
+                    textMessage = '✛20 HP';
                     break;
                 case 'speed' :
                     player.speed *= 1.1;
                     textMessage = 'SPEED ✛10%';
+                    player.propertiesText.render(`Speed: ${(player.speed * 1000).toFixed()} | Rockets: ${player.maxRockets}`);
                     break;
                 default: /*'scores'*/
-                    player.addScores(50);
-                    textMessage = '✛50 SCORES';
+                    player.addScores(100);
+                    textMessage = '✛100 SCORES';
             }
             messagesArr.push( new MessageText(textMessage, this.centerX, this.centerY) );
             playSound('se_bonus.mp3');
