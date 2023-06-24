@@ -32,18 +32,17 @@ class Bonus extends Sprite {
         // test collision with player
         if(getDistance(this, player) < this.size + player.size) {
             this.isExist = false;
-            let textMessage;
+            let textMessage, propertiesText;
             switch(this.type) {
                 case 'bullets' :
                     player.bulletsClip += 1;
                     textMessage = '✛1 SHUT';
                 break;
                 case 'rockets' :
-                    player.rockets += 1;
                     player.maxRockets += 1;
-                    player.rocketLaunchTimeout *= 0.8;
                     textMessage = '✛1 ROCKET';
-                    player.propertiesText.render(`Speed: ${(player.speed * 1000).toFixed()} | Rockets: ${player.maxRockets}`);
+                    propertiesText = `Speed: ${(player.speed * 1000).toFixed()} | Rockets: ${player.rockets}/${player.maxRockets}`;
+                    player.propertiesText.render( propertiesText );
                 break;
                 case 'repair' :
                     player.addDamage(-20);
@@ -52,7 +51,8 @@ class Bonus extends Sprite {
                 case 'speed' :
                     player.speed *= 1.1;
                     textMessage = 'SPEED ✛10%';
-                    player.propertiesText.render(`Speed: ${(player.speed * 1000).toFixed()} | Rockets: ${player.maxRockets}`);
+                    propertiesText = `Speed: ${(player.speed * 1000).toFixed()} | Rockets: ${player.rockets}/${player.maxRockets}`;
+                    player.propertiesText.render( propertiesText );
                     break;
                 default: /*'scores'*/
                     player.addScores(100);

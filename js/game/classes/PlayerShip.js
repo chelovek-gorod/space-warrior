@@ -30,10 +30,12 @@ class PlayerShip extends Spritesheet {
         this.reloadTime = this.reloadTimeout;
         this.bulletsArr = [];
 
-        this.rockets = 1;
+        this.rockets = 0;
         this.maxRockets = this.rockets;
-        this.rocketLaunchTimeout = 2000;
+        this.rocketLaunchTimeout = 500;
         this.rocketLaunchTime = this.rocketLaunchTimeout;
+        this.rocketReloadTimeout = 2000;
+        this.rocketReloadTime = this.rocketReloadTimeout;
         this.rocketStartSpeed = 0.1;
         this.rocketAcceleration = 1.02;
         this.rocketTurnSpeed = 0.05;
@@ -41,7 +43,7 @@ class PlayerShip extends Spritesheet {
         this.rocketsArr = [];
 
         this.propertiesText = new Text(
-            `Speed: ${(this.speed * 1000).toFixed()} | Rockets: ${this.maxRockets}`, canvas.centerX, 6, 
+            `Speed: ${(this.speed * 1000).toFixed()} | Rockets: ${this.rockets}/${this.maxRockets}`, canvas.centerX, 6, 
             {size: 20, font: 'MicraDi', color: '#00ff00', align: 'center' }
         );
     }
@@ -115,27 +117,38 @@ class PlayerShip extends Spritesheet {
             }
         }
 
-
         for(let i = 0; i < this.bulletsArr.length; i++) this.bulletsArr[i].update(dt);
         this.bulletsArr = getExistsObjectsFromArr(this.bulletsArr);
 
-        // launching
-        if (this.rocketLaunchTime > 0) this.rocketLaunchTime -= dt;
-        else if (this.rockets > 0 && (CURSOR.isClick || KEY.space)) {
-            this.rockets--;
-            this.rocketLaunchTime += this.rocketLaunchTimeout;
-            const rocket = new PlayerRocket(
-                this.centerX, this.centerY,
-                this.rocketStartSpeed, this.rocketAcceleration,
-                this.rocketTurnSpeed,
-                this.rocketDamage);
-            this.rocketsArr.push( rocket );
-            playSound('se_rocket_launch.mp3');
+        // launching rockets
+        if (this.rocketReloadTime > 0) {
+            this.rocketReloadTime -= dt;
+            if (this.rocketReloadTime <= 0) {
+                let propertiesText = `Speed: ${(this.speed * 1000).toFixed()} | Rockets: ${this.rockets}/${this.maxRockets}`;
+                this.propertiesText.render( propertiesText );
+            }
+        } else if (this.rockets > 0) {
+            if (this.rocketLaunchTime > 0) this.rocketLaunchTime -= dt;
+            else if (CURSOR.isClick || KEY.space) {
+                this.rocketLaunchTime += this.rocketLaunchTimeout;
+                this.rockets--;
+                const rocket = new PlayerRocket( this.centerX, this.centerY,
+                    this.rocketStartSpeed, this.rocketAcceleration,
+                    this.rocketTurnSpeed, this.rocketDamage);
+                this.rocketsArr.push( rocket );
+                playSound('se_rocket_launch.mp3');
+                let propertiesText = `Speed: ${(this.speed * 1000).toFixed()} | Rockets: ${this.rockets}/${this.maxRockets}`;
+                this.propertiesText.render( propertiesText );
+            }
+        } else {
+            this.rockets = this.maxRockets;
+            this.rocketReloadTime += this.rocketReloadTimeout;
         }
 
         for(let i = 0; i < this.rocketsArr.length; i++) this.rocketsArr[i].update(dt);
         this.rocketsArr = getExistsObjectsFromArr(this.rocketsArr);
 
+        // moving
         moveTo(this, gameCursor, this.speed * dt);
         this.drawWithAnimation(dt);
     }

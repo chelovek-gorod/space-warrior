@@ -25,8 +25,9 @@ const sources = {
         
             'enemy_52x78px.png',
             'enemy_100x130px.png',
-            'enemy_240x102px.png',
-            'enemy_120x120px.png',
+            'enemy_170x66px.png',
+            'enemy_102x240px.png',
+            'enemy_186x126px.png',
             'enemy_bullet_10x40px.png',
         
             'bonus_empty_48x48px.png',

@@ -18,6 +18,8 @@ class SimpleEnemy extends EnemyShipPrototype {
         this.shutTimeout = 2000 + Math.floor(Math.random() * 1000);
         this.shutTime = this.shutTimeout;
 
+        this.isWithBonus = false;
+
         this.isExist = true;
     }
 

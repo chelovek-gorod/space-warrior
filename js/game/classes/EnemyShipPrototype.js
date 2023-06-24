@@ -53,7 +53,6 @@ class EnemyShipPrototype extends Sprite {
         // test collision with player rocket
         for(let i = 0; i < player.rocketsArr.length; i++) {
             if(player.rocketsArr[i].isExist && getDistance(this, player.rocketsArr[i]) < this.size) {
-                player.rockets++;
                 player.rocketsArr[i].isExist = false;
                 this.addDamage( player.rocketsArr[i].damage, player.rocketsArr[i] )
                 if (this.hp <= 0) {

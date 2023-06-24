@@ -1,5 +1,5 @@
 import Sprite from "../../engine/classes/Sprite.js";
-import {player, asteroidsArr, oneLoopObjectsArr, smokeArr, enemiesArr} from "../main.js";
+import { asteroidsArr, oneLoopObjectsArr, smokeArr, enemiesArr } from "../main.js";
 import { getDistance, turnTo, moveAccordingDirection } from "../../engine/gameFunctions.js";
 import { playSound } from "../../engine/sound.js";
 import OneLoopSpritesheet from './OneLoopSpritesheet.js';
@@ -45,7 +45,6 @@ class PlayerRocket extends Sprite {
             moveAccordingDirection(this, this.speed * dt);
         } else {
             this.isExist = false;
-            player.rockets++;
             let explosion = new OneLoopSpritesheet(
                 'explosion_64x64px_17frames.png',
                 this.centerX, this.centerY,
@@ -58,7 +57,6 @@ class PlayerRocket extends Sprite {
         // test out of screen
         if (this.centerY < -this.halfHeight || this.centerY + this.halfHeight > canvas.height
         || this.centerX < -this.halfHeight|| this.centerX + this.halfHeight > canvas.width) {
-            player.rockets++;
             this.isExist = false;
             return;
         }

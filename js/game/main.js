@@ -27,6 +27,7 @@ import Asteroid from './classes/Asteroid.js';
 import SimpleEnemy from './classes/SimpleEnemy.js';
 import HeavyEnemy from './classes/HeavyEnemy.js';
 import FollowEnemy from './classes/FollowEnemy.js';
+import TankerEnemy from './classes/TankerEnemy.js';
 import LightningEnemy from './classes/LightningEnemy.js';
 
 /*
@@ -80,7 +81,7 @@ function createAsteroid() {
 let rocksArr = [];
 
 let enemiesArr = [];
-let maxEnemiesOnScreen = 2.5;
+let maxEnemiesOnScreen = 2;
 function addToMaxEnemies() { maxEnemiesOnScreen += 0.2 };
 function createEnemy() {
     let enemy; // SimpleEnemy, HeavyEnemy, FollowEnemy, LightningEnemy
@@ -89,18 +90,12 @@ function createEnemy() {
     let type = Math.floor(Math.random() * Math.floor(maxEnemiesOnScreen));
     switch (type) {
         case 0 :
-        case 1 :
-            enemy = new SimpleEnemy(xx, yy);
-        break;
+        case 1 : enemy = new SimpleEnemy(xx, yy); break;
         case 2 :
-        case 3 :
-            enemy = new HeavyEnemy(xx, yy);
-        break;
-        case 4 :
-            enemy = new FollowEnemy(xx, yy);
-        break;
-        default :
-            enemy = new LightningEnemy(xx, yy);
+        case 3 : enemy = new HeavyEnemy(xx, yy); break;
+        case 4 : enemy = new FollowEnemy(xx, yy); break;
+        case 5 : enemy = new TankerEnemy(xx, yy); break;
+        default : enemy = new LightningEnemy(xx, yy);
     }
     enemiesArr.push( enemy );
     console.log(enemiesArr);
