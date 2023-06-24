@@ -6,8 +6,8 @@ import { getDistance, turnTo, moveAccordingDirection, drawLightning } from '../.
 class LightningEnemy extends EnemyShipPrototype {
     constructor(x, y) {
         super('enemy_186x126px.png', x, y);
-        this.speed = 0.03 + Math.random() * 0.03;
-        this.turnSpeed = 0.01;
+        this.speed = 0.02 + Math.random() * 0.02;
+        this.turnSpeed = 0.002;
         this.hp = 70;
         this.damage = this.hp;
         this.scores = this.hp;

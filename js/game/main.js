@@ -81,7 +81,7 @@ function createAsteroid() {
 let rocksArr = [];
 
 let enemiesArr = [];
-let maxEnemiesOnScreen = 2;
+let maxEnemiesOnScreen = 2.5;
 function addToMaxEnemies() { maxEnemiesOnScreen += 0.2 };
 function createEnemy() {
     let enemy; // SimpleEnemy, HeavyEnemy, FollowEnemy, LightningEnemy
@@ -92,9 +92,11 @@ function createEnemy() {
         case 0 :
         case 1 : enemy = new SimpleEnemy(xx, yy); break;
         case 2 :
-        case 3 : enemy = new HeavyEnemy(xx, yy); break;
-        case 4 : enemy = new FollowEnemy(xx, yy); break;
-        case 5 : enemy = new TankerEnemy(xx, yy); break;
+        case 3 : 
+        case 4 : enemy = new HeavyEnemy(xx, yy); break;
+        case 5 : enemy = new FollowEnemy(xx, yy); break;
+        case 6 : 
+        case 7 : enemy = new TankerEnemy(xx, yy); break;
         default : enemy = new LightningEnemy(xx, yy);
     }
     enemiesArr.push( enemy );

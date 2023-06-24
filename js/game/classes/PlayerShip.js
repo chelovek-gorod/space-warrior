@@ -30,7 +30,7 @@ class PlayerShip extends Spritesheet {
         this.reloadTime = this.reloadTimeout;
         this.bulletsArr = [];
 
-        this.rockets = 0;
+        this.rockets = 1;
         this.maxRockets = this.rockets;
         this.rocketLaunchTimeout = 500;
         this.rocketLaunchTime = this.rocketLaunchTimeout;

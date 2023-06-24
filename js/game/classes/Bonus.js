@@ -49,8 +49,8 @@ class Bonus extends Sprite {
                     textMessage = '✛20 HP';
                     break;
                 case 'speed' :
-                    player.speed *= 1.1;
-                    textMessage = 'SPEED ✛10%';
+                    player.speed *= 1.2;
+                    textMessage = 'SPEED ✛20%';
                     propertiesText = `Speed: ${(player.speed * 1000).toFixed()} | Rockets: ${player.rockets}/${player.maxRockets}`;
                     player.propertiesText.render( propertiesText );
                     break;
